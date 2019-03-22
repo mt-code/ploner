@@ -15,6 +15,7 @@ namespace ploner.classes
         /// </summary>
         /// <param name="backupConfig">The backup configuration containing the various input/output paths.</param>
         public static void cloneAll(BackupConfiguration backupConfig) {
+          
             foreach (var backup in backupConfig.backups) {
                 var cloner = new Cloner(backup);
                 cloner.start();
@@ -59,8 +60,9 @@ namespace ploner.classes
             foreach (var file in Directory.EnumerateFiles(directory)) {
                 var fullFilePath = Path.GetFullPath(file);
                 var outputFilePath = Path.Combine(_backup.outputPath, relativeDirectory, Path.GetFileName(file));
+                var isEqualSize = new FileInfo(fullFilePath).Length == new FileInfo(outputFilePath).Length;
 
-                if (File.Exists(outputFilePath) && getMd5(fullFilePath) == getMd5(outputFilePath)) {
+                if (File.Exists(outputFilePath) && isEqualSize) {
                     continue;
                 }
 
@@ -70,8 +72,8 @@ namespace ploner.classes
                     var sourcePath = filePaths[0].ToString();
                     var targetPath = filePaths[1].ToString();
                     
-                    File.Copy(sourcePath, targetPath, true);
                     Console.WriteLine($"[F] {targetPath}");
+                    File.Copy(sourcePath, targetPath, true);
                 }, new object[] { fullFilePath, outputFilePath });
             }
             
@@ -85,19 +87,6 @@ namespace ploner.classes
                 }
                 
                 cloneDirectory(Path.GetFullPath(dir));
-            }
-        }
-
-        /// <summary>
-        /// Gets the MD5 hash of the file.
-        /// </summary>
-        /// <param name="filePath">The full file path of the file to be hashed.</param>
-        /// <returns>The MD5 hash as a string.</returns>
-        private string getMd5(string filePath) {
-            using (var md5 = MD5.Create()) {
-                using (var stream = File.OpenRead(filePath)) {
-                    return BitConverter.ToString(md5.ComputeHash(stream));
-                }
             }
         }
     }
