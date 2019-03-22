@@ -1,9 +1,14 @@
-﻿namespace ploner
+﻿using ploner.classes;
+
+namespace ploner
 {
     internal class Program
     {
-        public static void Main(string[] args)
-        {
+        private const string ConfigPath = "backups.json";
+        
+        public static void Main(string[] args) {
+            var backupConfig = new BackupConfiguration(ConfigPath);
+            
         }
     }
 }
