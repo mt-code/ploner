@@ -18,7 +18,7 @@ namespace ploner.classes
         /// <param name="configPath">The file path for the config file to be used.</param>
         public BackupConfiguration(string configPath) {
             if (!File.Exists(configPath)) {
-                File.Create(configPath);
+                File.Create(configPath).Close();
             }
             
             _configPath = configPath;
