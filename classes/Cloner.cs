@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Security.Cryptography;
+using System.Threading;
 using ploner.model;
 
 namespace ploner.classes
@@ -57,14 +58,21 @@ namespace ploner.classes
             // Copy files in directory.
             foreach (var file in Directory.EnumerateFiles(directory)) {
                 var fullFilePath = Path.GetFullPath(file);
-                var outputFile = Path.Combine(_backup.outputPath, relativeDirectory, Path.GetFileName(file));
+                var outputFilePath = Path.Combine(_backup.outputPath, relativeDirectory, Path.GetFileName(file));
 
-                if (File.Exists(outputFile) && getMd5(fullFilePath) == getMd5(outputFile)) {
+                if (File.Exists(outputFilePath) && getMd5(fullFilePath) == getMd5(outputFilePath)) {
                     continue;
                 }
-                
-                File.Copy(fullFilePath, outputFile, true);
-                Console.WriteLine($"[F] {outputFile}");
+
+                // Add the file copy delegate to the thread pool.
+                ThreadPool.QueueUserWorkItem(delegate(object paths) {
+                    var filePaths = paths as object[];
+                    var sourcePath = filePaths[0].ToString();
+                    var targetPath = filePaths[1].ToString();
+                    
+                    File.Copy(sourcePath, targetPath, true);
+                    Console.WriteLine($"[F] {targetPath}");
+                }, new object[] { fullFilePath, outputFilePath });
             }
             
             // Copy directories in directory.
