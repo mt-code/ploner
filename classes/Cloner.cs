@@ -64,6 +64,7 @@ namespace ploner.classes
                 }
                 
                 File.Copy(fullFilePath, outputFile, true);
+                Console.WriteLine($"[F] {outputFile}");
             }
             
             // Copy directories in directory.
@@ -71,7 +72,8 @@ namespace ploner.classes
                 var outputDirectory = Path.Combine(_backup.outputPath, relativeDirectory, Path.GetFileName(dir));
 
                 if (!Directory.Exists(outputDirectory)) {
-                    Directory.CreateDirectory(outputDirectory);    
+                    Directory.CreateDirectory(outputDirectory);
+                    Console.WriteLine($"[D] {outputDirectory}");
                 }
                 
                 cloneDirectory(Path.GetFullPath(dir));
