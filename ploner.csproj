@@ -43,6 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\BackupConfiguration.cs" />
+    <Compile Include="classes\Cloner.cs" />
+    <Compile Include="classes\InteractiveParser.cs" />
     <Compile Include="model\Backup.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

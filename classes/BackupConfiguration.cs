@@ -9,8 +9,8 @@ namespace ploner.classes
 {
     public class BackupConfiguration
     {
+        public readonly List<Backup> backups;
         private readonly string _configPath;
-        private readonly List<Backup> _backups;
         
         /// <summary>
         /// Initialise our backup configuration using the specified config file.
@@ -22,7 +22,7 @@ namespace ploner.classes
             }
             
             _configPath = configPath;
-            _backups = getBackupsFromFile();          
+            backups = getBackupsFromFile();          
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace ploner.classes
         /// <param name="inputPath">The input root path that should be cloned.</param>
         /// <param name="outputPath">The output root path where the cloned files will be copied.</param>
         public void add(string inputPath, string outputPath) {
-            _backups.Add(new Backup(inputPath, outputPath));
+            backups.Add(new Backup(inputPath, outputPath));
             save();
         }
 
@@ -40,7 +40,7 @@ namespace ploner.classes
         /// </summary>
         /// <param name="index">The index of the backup item to be removed.</param>
         public void remove(int index) {
-            _backups.RemoveAt(index);
+            backups.RemoveAt(index);
             save();
         }
 
@@ -48,8 +48,8 @@ namespace ploner.classes
         /// Lists the backup items and their index in the configuration file.
         /// </summary>
         public void list() {
-            for (var i = 0; i < _backups.Count; i++) {
-                var backup = _backups[i];
+            for (var i = 0; i < backups.Count; i++) {
+                var backup = backups[i];
 
                 Console.WriteLine($"[{i}] Input: {backup.inputPath}, Output: {backup.outputPath}");
             }
@@ -59,7 +59,7 @@ namespace ploner.classes
         /// Saves the backup items to the configuration file.
         /// </summary>
         private void save() {
-            File.WriteAllText(_configPath, JsonConvert.SerializeObject(_backups));
+            File.WriteAllText(_configPath, JsonConvert.SerializeObject(backups));
         }
 
         /// <summary>
