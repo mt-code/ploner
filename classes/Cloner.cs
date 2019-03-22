@@ -60,10 +60,10 @@ namespace ploner.classes
             foreach (var file in Directory.EnumerateFiles(directory)) {
                 var fullFilePath = Path.GetFullPath(file);
                 var outputFilePath = Path.Combine(_backup.outputPath, relativeDirectory, Path.GetFileName(file));
-                var isEqualSize = new FileInfo(fullFilePath).Length == new FileInfo(outputFilePath).Length;
 
-                if (File.Exists(outputFilePath) && isEqualSize) {
-                    continue;
+                if (File.Exists(outputFilePath)
+                    && new FileInfo(fullFilePath).Length == new FileInfo(outputFilePath).Length) {
+                        continue;
                 }
 
                 // Add the file copy delegate to the thread pool.
